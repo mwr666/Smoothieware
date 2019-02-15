@@ -26,6 +26,7 @@
 #include "Planner.h"
 #include "StepperMotor.h"
 #include "EndstopsPublicAccess.h"
+#include "ExtruderPublicAccess.h"
 
 #include <string>
 using namespace std;
@@ -49,12 +50,19 @@ void MainMenuScreen::setupConfigureScreen()
     mvs->set_parent(this);
 
     // acceleration
-    mvs->addMenuItem("def Acceleration", // menu name
+    mvs->addMenuItem("axis Accel", // menu name
         []() -> float { return THEROBOT->get_default_acceleration(); }, // getter
         [this](float acc) { send_gcode("M204", 'S', acc); }, // setter
         10.0F, // increment
         1.0F, // Min
         10000.0F // Max
+        );
+		
+	 mvs->addMenuItem("extr Accel", // menu name
+        []() -> float { pad_extruder_t rd; if(PublicData::get_value( extruder_checksum, (void *)&rd )) return rd.accleration; else return 0; }, // getter
+        [this](float acc) { send_gcode("M204", 'E', acc); }, // setter
+        10.0F, // increment
+        1.0F   // Min
         );
 
     // steps/mm
@@ -78,6 +86,38 @@ void MainMenuScreen::setupConfigureScreen()
         0.1F,
         1.0F
         );
+		
+	mvs->addMenuItem("E steps/mm",
+        // gets steps/mm for currently active extruder
+        []() -> float { pad_extruder_t rd; if(PublicData::get_value( extruder_checksum, (void *)&rd )) return rd.steps_per_mm; else return 0.0F; },
+        [this](float v) { send_gcode("M92", 'E', v); },
+        0.1F,
+        1.0F
+        );
+		
+    // flow rate
+    mvs->addMenuItem("Flow rate", // menu name
+        []() -> float { pad_extruder_t rd; if(PublicData::get_value( extruder_checksum, (void *)&rd )) return rd.flow_rate*100.0F; else return 100.0F; }, // getter as fraction
+        [this](float fr) { send_gcode("M221", 'S', fr); }, // setter in percent
+        1.0F, // increment
+        1.0F  // Min
+        );	
+
+    mvs->addMenuItem("Retract len", // menu name
+        []() -> float { pad_extruder_t rd; if(PublicData::get_value( extruder_checksum, (void *)&rd )) return rd.retract_length; else return 0; }, // getter
+        [this](float l) { send_gcode("M207", 'S', l); }, // setter
+        0.1F, // increment
+        0.0F  // Min
+        );
+		
+	mvs->addMenuItem("Filament diameter",
+        // gets filament diameter for currently active extruder
+        []() -> float { pad_extruder_t rd; if(PublicData::get_value( extruder_checksum, (void *)&rd )) return rd.filament_diameter; else return 0.0F; },
+        [this](float v) { send_gcode("M200", 'D', v); },
+        0.01F,
+        0.0F,
+        4.0F
+        );
 
     mvs->addMenuItem("Z Home Ofs",
         []() -> float { float rd[3]; PublicData::get_value( endstops_checksum, home_offset_checksum, rd ); return rd[2]; },
@@ -85,7 +125,7 @@ void MainMenuScreen::setupConfigureScreen()
         0.01F
         );
 
-    mvs->addMenuItem("Contrast",
+    mvs->addMenuItem("LCD Contrast",
         []() -> float { return THEPANEL->lcd->getContrast(); },
         [this](float v) { THEPANEL->lcd->setContrast(v); },
         1,
@@ -100,7 +140,7 @@ void MainMenuScreen::setupConfigureScreen()
 void MainMenuScreen::on_enter()
 {
     THEPANEL->enter_menu_mode();
-    THEPANEL->setup_menu(7);
+    THEPANEL->setup_menu(6);
     this->refresh_menu();
 }
 
@@ -117,13 +157,14 @@ void MainMenuScreen::on_refresh()
 void MainMenuScreen::display_menu_line(uint16_t line)
 {
     switch ( line ) {
-        case 0: THEPANEL->lcd->printf("Watch"); break;
-        case 1: if(THEKERNEL->is_halted()) THEPANEL->lcd->printf("Clear HALT"); else THEPANEL->lcd->printf(THEPANEL->is_playing() ? "Abort" : "Play"); break;
-        case 2: THEPANEL->lcd->printf("Jog"); break;
-        case 3: THEPANEL->lcd->printf("Prepare"); break;
-        case 4: THEPANEL->lcd->printf("Custom"); break;
+        case 0: THEPANEL->lcd->printf("Info Screen"); break;
+        case 1: if(THEKERNEL->is_halted()) THEPANEL->lcd->printf("Clear HALT"); else THEPANEL->lcd->printf(THEPANEL->is_playing() ? "Abort" : "Play file"); break;
+		case 2: THEPANEL->lcd->printf("Prepare"); break;
+        case 3: THEPANEL->lcd->printf("Set axis"); break;
+//        case 4: THEPANEL->lcd->printf("Custom"); break;
+		case 4: THEPANEL->lcd->printf("Calibrate"); break;
         case 5: THEPANEL->lcd->printf("Configure"); break;
-        case 6: THEPANEL->lcd->printf("Probe"); break;
+ //       case 6: THEPANEL->lcd->printf("Probe"); break;
     }
 }
 
@@ -137,11 +178,11 @@ void MainMenuScreen::clicked_menu_entry(uint16_t line)
                 THEPANEL->enter_screen(this->watch_screen);
             }else if(THEPANEL->is_playing()) abort_playing();
              else THEPANEL->enter_screen(this->file_screen); break;
-        case 2: THEPANEL->enter_screen(this->jog_screen     ); break;
-        case 3: THEPANEL->enter_screen(this->prepare_screen ); break;
+		case 2: THEPANEL->enter_screen(this->prepare_screen ); break;
+        case 3: THEPANEL->enter_screen(this->jog_screen     ); break;
         case 4: THEPANEL->enter_screen(THEPANEL->custom_screen ); break;
         case 5: setupConfigureScreen(); break;
-        case 6: THEPANEL->enter_screen((new ProbeScreen())->set_parent(this)); break;
+//        case 6: THEPANEL->enter_screen((new ProbeScreen())->set_parent(this)); break;
     }
 }
 

@@ -11,6 +11,7 @@
 #include "LcdBase.h"
 #include "Panel.h"
 #include "ConfigValue.h"
+#include "bitmaps.h"
 
 #include <string.h>
 
@@ -91,6 +92,9 @@ void ModifyValuesScreen::on_refresh()
                 THEPANEL->set_control_value((value = this->max_value));
                 THEPANEL->reset_counter();
             }
+			if (THEPANEL->lcd->hasFullGraphics()) {
+			THEPANEL->lcd->drawBox(0, 16, 128, 8, 0);	// gui needs something to clear the space for displaying new values
+			}
             THEPANEL->lcd->setCursor(0, 2);
             THEPANEL->lcd->printf("%10.3f    ", value);
             if(this->instant) {
@@ -142,6 +146,9 @@ void ModifyValuesScreen::clicked_menu_entry(uint16_t line)
         THEPANEL->lcd->printf("%s", name);
         THEPANEL->lcd->setCursor(0, 2);
         THEPANEL->lcd->printf("%10.3f", value);
+		THEPANEL->lcd->bltGlyph(119, 27, icon_width, icon_height, ok_icon);
+		THEPANEL->lcd->bltGlyph(119, 0, icon_width, icon_height, plus_icon);
+		THEPANEL->lcd->bltGlyph(119, 55, icon_width, icon_height, minus_icon);
     }
 }
 

@@ -58,7 +58,7 @@ public:
      * @param cs   DigitalOut pin used as SD Card chip select
      * @param name The name used to access the virtual filesystem
      */
-    SDCard(PinName, PinName, PinName, PinName);
+    SDCard(PinName, PinName, PinName, PinName, uint32_t frequency = 2500000);
     virtual ~SDCard() {};
 
     typedef enum {
@@ -100,6 +100,8 @@ protected:
 
     mbed::SPI _spi;
     GPIO _cs;
+	
+	uint32_t frequency;
 
     volatile bool busyflag;
 

@@ -22,10 +22,17 @@ public:
     int idle_timeout_secs() { return 60; }
 
 private:
-    void preheat();
+    void get_current_status();
+//    void preheat();
     void cooldown();
     void setup_temperature_screen();
-
+	    
+	struct {
+        bool speed_changed:1;
+        bool issue_change_speed:1;
+        bool fan_state:1;
+    };
+	
     PanelScreen *extruder_screen;
 };
 

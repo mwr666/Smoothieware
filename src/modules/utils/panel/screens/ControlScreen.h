@@ -19,8 +19,8 @@ public:
     void on_enter();
     void display_menu_line(uint16_t line);
     void set_jog_increment(float i) { jog_increment = i;}
-    int idle_timeout_secs() { return 120; }
-
+    int idle_timeout_secs() { return 360; }
+	 
 private:
     void clicked_menu_entry(uint16_t line);
     void display_axis_line(char axis);
@@ -32,6 +32,7 @@ private:
     bool pos_changed;
     float pos[3];
     float jog_increment;
+
 };
 
 

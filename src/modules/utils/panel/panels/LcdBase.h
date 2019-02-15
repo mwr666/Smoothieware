@@ -53,14 +53,23 @@ class LcdBase {
         virtual void setLedBrightness(int led, int val){};
         virtual void buzz(long,uint16_t){};
         virtual bool hasGraphics() { return false; }
+        virtual bool hasFullGraphics() { return false; }     // Temporary. Remove this once RRDGLCD has more graphics functions implemented.
         virtual bool encoderReturnsDelta() { return false; } // set to true if the panel handles encoder clicks and returns a delta
         virtual uint8_t getContrast() { return 0; }
         virtual void setContrast(uint8_t c) { }
 
+        // Graphics Functions
         // on graphics panels, the input bitmap is in X windows XBM format but
         // with the bits in a byte reversed so bit7 is left most and bit0 is
         // right most. x_offset must by byte aligned if used
         virtual void bltGlyph(int x, int y, int w, int h, const uint8_t *glyph, int span= 0, int x_offset=0, int y_offset=0){}
+        virtual void setCursorPX(int x, int y) {};
+        virtual void setColor(int c) {};
+        virtual void pixel(int x, int y, int color = 1) {};
+        virtual void drawHLine(int x, int y, int w, int color = 1) {};
+        virtual void drawVLine(int x, int y, int h, int color = 1) {};
+        virtual void drawBox(int x, int y, int w, int h, int color = 1) {};
+
         // only used on certain panels
         virtual void on_refresh(bool now= false){};
         virtual void on_main_loop(){};

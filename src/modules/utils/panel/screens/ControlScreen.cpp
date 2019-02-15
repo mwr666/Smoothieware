@@ -18,6 +18,7 @@
 #include "PublicData.h"
 #include "checksumm.h"
 #include "LcdBase.h"
+#include "bitmaps.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -56,6 +57,9 @@ void ControlScreen::on_refresh()
 
         } else if (THEPANEL->control_value_change()) {
             this->pos[this->controlled_axis - 'X'] = THEPANEL->get_control_value();
+			if (THEPANEL->lcd->hasFullGraphics()) {
+				THEPANEL->lcd->drawBox(0, 16, 128, 8, 0);	// gui needs something to clear the space for displaying new values
+			}
             THEPANEL->lcd->setCursor(0, 2);
             this->display_axis_line(this->controlled_axis);
             this->pos_changed = true; // make the gcode in main_loop
@@ -91,7 +95,7 @@ void ControlScreen::display_menu_line(uint16_t line)
 
 void ControlScreen::display_axis_line(char axis)
 {
-    THEPANEL->lcd->printf("Move %c    %8.3f", axis, this->pos[axis - 'X']);
+	THEPANEL->lcd->printf("Move %c    %8.3f", axis, this->pos[axis - 'X']);
 }
 
 
@@ -117,6 +121,18 @@ void ControlScreen::enter_axis_control(char axis)
 
     THEPANEL->lcd->setCursor(0, 2);
     this->display_axis_line(this->controlled_axis);
+	THEPANEL->lcd->bltGlyph(119, 27, icon_width, icon_height, ok_icon);
+	if (axis == 'X'){
+		THEPANEL->lcd->bltGlyph(119, 0, icon_width, icon_height, right_icon);
+		THEPANEL->lcd->bltGlyph(119, 55, icon_width, icon_height, left_icon);
+	} else if (axis == 'Y'){
+		THEPANEL->lcd->bltGlyph(119, 0, icon_width, icon_height, back_icon);
+		THEPANEL->lcd->bltGlyph(119, 55, icon_width, icon_height, front_icon);
+	} else if (axis == 'Z'){
+		THEPANEL->lcd->bltGlyph(119, 0, icon_width, icon_height, down_icon);
+		THEPANEL->lcd->bltGlyph(119, 55, icon_width, icon_height, up_icon);
+	}
+	
 }
 
 void ControlScreen::enter_menu_control()

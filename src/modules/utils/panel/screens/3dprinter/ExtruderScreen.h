@@ -17,10 +17,14 @@ class ExtruderScreen : public PanelScreen {
         void on_enter();
         void display_menu_line(uint16_t line);
         void clicked_menu_entry(uint16_t line);
-        int idle_timeout_secs() { return 60; }
+        int idle_timeout_secs() { return 360; }
 
     private:
-      void setupConfigSettings();
+	
+	std::vector<uint16_t> temp_controllers;
+      //void setupConfigSettings();
+	  void chckHotendTemp();
+	  
 };
 
 #endif
