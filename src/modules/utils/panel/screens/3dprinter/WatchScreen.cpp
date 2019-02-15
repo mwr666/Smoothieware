@@ -341,6 +341,7 @@ void WatchScreen::redraw()
 void WatchScreen::draw_graphics()
 {
     THEPANEL->lcd->clear();
+    THEPANEL->lcd->setBackground(false);
 
     // Print the status line
     THEPANEL->lcd->setCursorPX(0, 0); THEPANEL->lcd->printf("%.21s", this->get_status());
@@ -360,7 +361,7 @@ void WatchScreen::draw_graphics()
     if (this->has_fan == false){
 	row++;
 	}
-	
+
     // Print the fan speed
     if (this->has_fan) {
         y = 11 + (row * (icon_height+1));
@@ -438,4 +439,6 @@ void WatchScreen::draw_graphics()
         THEPANEL->lcd->printf("%u%%", this->sd_pcnt_played);
         THEPANEL->lcd->setColor(1);
     }
+
+    THEPANEL->lcd->setBackground(true);
 }

@@ -57,9 +57,6 @@ void ControlScreen::on_refresh()
 
         } else if (THEPANEL->control_value_change()) {
             this->pos[this->controlled_axis - 'X'] = THEPANEL->get_control_value();
-			if (THEPANEL->lcd->hasFullGraphics()) {
-				THEPANEL->lcd->drawBox(0, 16, 128, 8, 0);	// gui needs something to clear the space for displaying new values
-			}
             THEPANEL->lcd->setCursor(0, 2);
             this->display_axis_line(this->controlled_axis);
             this->pos_changed = true; // make the gcode in main_loop

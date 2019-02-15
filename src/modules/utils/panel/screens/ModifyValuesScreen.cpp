@@ -92,9 +92,6 @@ void ModifyValuesScreen::on_refresh()
                 THEPANEL->set_control_value((value = this->max_value));
                 THEPANEL->reset_counter();
             }
-			if (THEPANEL->lcd->hasFullGraphics()) {
-			THEPANEL->lcd->drawBox(0, 16, 128, 8, 0);	// gui needs something to clear the space for displaying new values
-			}
             THEPANEL->lcd->setCursor(0, 2);
             THEPANEL->lcd->printf("%10.3f    ", value);
             if(this->instant) {
