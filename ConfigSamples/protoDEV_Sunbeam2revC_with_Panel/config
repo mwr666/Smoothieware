@@ -20,7 +20,7 @@ gamma_steps_per_mm                           400              # Steps per mm for
 
 # Planner module configuration : Look-ahead and acceleration configuration
 # See http://smoothieware.org/motion-control
-acceleration                                 2500             # Acceleration in mm/second/second.
+acceleration                                 2500             # 2500 Acceleration in mm/second/second.
 z_acceleration                               100              # Acceleration for Z only moves in mm/s^2, 0 uses acceleration which is the default. DO NOT SET ON A DELTA
 junction_deviation                           0.03             # See http://smoothieware.org/motion-control#junction-deviation
 #z_junction_deviation                         0.0              # For Z only moves, -1 uses junction_deviation, zero disables junction_deviation on z moves DO NOT SET ON A DELTA
@@ -56,8 +56,8 @@ gamma_max_rate                               1200.0           # Maximum rate in 
 extruder.hotend.enable                          true          # Whether to activate the extruder module at all. All configuration is ignored if false
 extruder.hotend.steps_per_mm                    207.500		  # 136.500Steps per mm for extruder stepper
 extruder.hotend.default_feed_rate               600           # Default rate ( mm/minute ) for moves where only the extruder moves
-extruder.hotend.acceleration                    250 	      # 700 Acceleration for the stepper motor mm/sec²
-extruder.hotend.max_speed                       120           # Maximum speed in mm/s
+extruder.hotend.acceleration                    500 	      # Acceleration for the stepper motor mm/sec²
+extruder.hotend.max_speed                       80            # Maximum speed in mm/s
 
 extruder.hotend.step_pin                        2.3           # Pin for extruder step signal
 extruder.hotend.dir_pin                         0.22          # Pin for extruder dir signal ( add '!' to reverse direction )
@@ -257,13 +257,13 @@ corexy_homing                                true            # Set to true if ho
 alpha_min_endstop                            1.27^           # Pin to read min endstop, add a ! to invert if endstop is NO connected to ground
 alpha_max_endstop                            nc              # Pin to read max endstop, uncomment this and comment the above if using max endstops
 alpha_homing_direction                       home_to_min     # Or set to home_to_max and set alpha_max and uncomment the alpha_max_endstop
-alpha_min                                    -5              # This gets loaded as the current position after homing when home_to_min is set
-alpha_max                                    245             # This gets loaded as the current position after homing when home_to_max is set
+alpha_min                                    -1              # This gets loaded as the current position after homing when home_to_min is set
+alpha_max                                    255             # This gets loaded as the current position after homing when home_to_max is set
 beta_min_endstop                             1.28^           # Pin to read min endstop, add a ! to invert if endstop is NO connected to ground
 beta_max_endstop                             nc              # Pin to read max endstop, uncomment this and comment the above if using max endstops
 beta_homing_direction                        home_to_min     # Or set to home_to_max and set alpha_max and uncomment the alpha_max_endstop
-beta_min                                     -10             # This gets loaded as the current position after homing when home_to_min is set
-beta_max                                     245             # This gets loaded as the current position after homing when home_to_max is set
+beta_min                                     -5              # This gets loaded as the current position after homing when home_to_min is set
+beta_max                                     250             # This gets loaded as the current position after homing when home_to_max is set
 gamma_min_endstop                            nc              # Pin to read min endstop, add a ! to invert if endstop is NO connected to ground
 gamma_max_endstop                            1.29^           # Pin to read max endstop, uncomment this and comment the above if using max endstops
 gamma_homing_direction                       home_to_max     # Or set to home_to_max and set alpha_max and uncomment the alpha_max_endstop
@@ -272,9 +272,9 @@ gamma_max                                    239.480         # This gets loaded 
 
 soft_endstop.enable         				 true         	 # Enable soft endstops
 soft_endstop.x_min          				 0            	 # Minimum X position
-soft_endstop.x_max          				 245          	 # Maximum X position
+soft_endstop.x_max          				 255          	 # Maximum X position
 soft_endstop.y_min          				 0            	 # Minimum Y position
-soft_endstop.y_max          				 245          	 # Maximum Y position
+soft_endstop.y_max          				 250          	 # Maximum Y position
 soft_endstop.z_min          				 0            	 # Minimum Z position
 soft_endstop.z_max          				 238          	 # Maximum Z position
 soft_endstop.halt           				 false         	 # Whether to issue a HALT state when hitting a soft endstop (if false, will just ignore commands that would exceed the limit)
@@ -347,23 +347,39 @@ panel.external_sd.sdcd_pin                   1.26!^          # sd detect signal 
 
 custom_menu.zero.enable                      true            #
 custom_menu.zero.name                        Reset_Test_Zone #
-custom_menu.zero.command   G28|G0X122Y122F7000|G0Z0.06       #
+custom_menu.zero.command   G28|G0X127.5Y125F7000|G0Z0.06     #
 
 custom_menu.cal1.enable                      true            #
 custom_menu.cal1.name                        Check_Front     #
-custom_menu.cal1.command                G0X122.5Y5F7000      #
+custom_menu.cal1.command                G0X127.5Y0F7000      #
 
 custom_menu.cal2.enable                      true            #
 custom_menu.cal2.name                       Check_Back_Right #
-custom_menu.cal2.command                G0X240Y240F7000      #
+custom_menu.cal2.command                G0X255Y250F7000      #
 
 custom_menu.cal3.enable                      true            #
 custom_menu.cal3.name                        Check_Back_Left #
-custom_menu.cal3.command                G0X5Y240F7000        #
+custom_menu.cal3.command                G0X0Y250F7000        #
 
 custom_menu.cal4.enable                      true            #
-custom_menu.cal4.name                        Check_Center    #
-custom_menu.cal4.command                G0X122.5Y122.5F7000  #
+custom_menu.cal4.name                        Check_Front_Left#
+custom_menu.cal4.command                G0X0Y0F7000          #
+
+custom_menu.cal5.enable                      true            #
+custom_menu.cal5.name                       Check_Front_Right#
+custom_menu.cal5.command                G0X255Y0F7000        #
+
+custom_menu.cal6.enable                      true            #
+custom_menu.cal6.name                       Check_Mid_Right  #
+custom_menu.cal6.command                G0X255Y125F7000      #
+
+custom_menu.cal7.enable                      true            #
+custom_menu.cal7.name                        Check_Mid_Left  #
+custom_menu.cal7.command                G0X0Y125F7000        #
+
+custom_menu.cal8.enable                      true            #
+custom_menu.cal8.name                        Check_Center    #
+custom_menu.cal8.command                G0X125.5Y125F7000    #
 
 custom_menu.test0.enable                     true            #
 custom_menu.test0.name                       Speed_300_\     #
