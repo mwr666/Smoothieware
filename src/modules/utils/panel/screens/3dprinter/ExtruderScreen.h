@@ -24,6 +24,7 @@ class ExtruderScreen : public PanelScreen {
 	std::vector<uint16_t> temp_controllers;
       //void setupConfigSettings();
 	  void chckHotendTemp();
+	  void preheat();
 	  
 };
 

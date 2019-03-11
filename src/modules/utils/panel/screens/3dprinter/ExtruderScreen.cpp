@@ -30,6 +30,7 @@ using namespace std;
 ExtruderScreen::ExtruderScreen()
 {
 }
+float deftemp;
 bool hot = false;
 bool readyhot = false;
 static struct pad_temperature getTemperatures(uint16_t heater_cs)
@@ -50,6 +51,7 @@ void ExtruderScreen::on_enter()
             temp_controllers.push_back(c.id);
         }
 	}
+	deftemp = THEPANEL->get_default_hotend_temp();
     THEPANEL->enter_menu_mode();
 	    // if no heaters or extruder then don't show related menu items
     THEPANEL->setup_menu(6);
@@ -89,15 +91,20 @@ void ExtruderScreen::clicked_menu_entry(uint16_t line)
     switch ( line ) {
         case 0: THEPANEL->enter_screen(this->parent); return;
 		case 1: send_command("suspend"); break;
-		case 2: if (hot == true) send_command("\nM104_S0"); else send_command("\nM104_S220"); hot = true; break; 
+		case 2: if (hot == true) send_command("\nM104_S0"); else this->preheat(); hot = true; break; 
 //        case 2: send_command("M120\nG91\nG1 E5 F200\nM121"); break;
 //        case 3: send_command("M120\nG91\nG1 E-5 F200\nM121"); break;      
-        case 3: if (readyhot == true) send_command("M120\nG91\nG1 E-100 F6000\nM121"); break;
-		case 4: if (readyhot == true) send_command("M120\nG91\nG1 E100 F300\nM121"); break;
-		case 5: if (readyhot == true) send_command("M120\nG91\nG1 E10 F100\nM121"); break;
+        case 3: if (readyhot == true) send_command("M120\nG91\nG1 E-100 F6000\nM121\nG92 E0"); break;
+		case 4: if (readyhot == true) send_command("M120\nG91\nG1 E90 F300\nM121\nG92 E0"); break;
+		case 5: if (readyhot == true) send_command("M120\nG91\nG1 E10 F100\nM121\nG92 E0"); break;
 		
 //      case 3: setupConfigSettings(); break; // lazy load
     }
+}
+
+void ExtruderScreen::preheat()
+{
+    PublicData::set_value( temperature_control_checksum, hotend_checksum, &deftemp );
 }
 
 void ExtruderScreen::chckHotendTemp()
@@ -107,14 +114,14 @@ void ExtruderScreen::chckHotendTemp()
       //      if(c.current_temperature > 50) is_hot= true; // anything is hot
             if(c.designator.front() == 'T') { // a hotend by convention
 				int t= std::min(999, (int)roundf(c.current_temperature)); 
-				if (t >= 220){
+				if (t >= deftemp){
 				readyhot=true;
 				}
 				else{
 				readyhot=false;
 				}
 				int tt= roundf(c.target_temperature);
-				if (tt == 220){
+				if (tt == deftemp){
 				THEPANEL->lcd->printf("Cooldown");
 				hot=true;
 				}
@@ -123,7 +130,7 @@ void ExtruderScreen::chckHotendTemp()
 				hot=false;
 				}
 				THEPANEL->lcd->setCursor(1, 7);
-				if ((hot == true) && (t < 220)){
+				if ((hot == true) && (t < deftemp)){
 				THEPANEL->lcd->printf(" Heating up:%03d/%03d", t, tt);
 				}
 				else{

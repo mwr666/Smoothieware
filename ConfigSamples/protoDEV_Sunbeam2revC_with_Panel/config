@@ -332,7 +332,7 @@ panel.up_button_pin                          1.31!           #
 panel.down_button_pin                        1.30!           #
 panel.click_button_pin                       2.11!           #
 panel.longpress_delay                        15				 #
-panel.hotend_temperature					 180		     # Temperature to set the hotend to when using the pre-heating menu item	
+panel.hotend_temperature					 225		     # Temperature to set the hotend to when using the pre-heating menu item	
 panel.bed_temperature						 60				 # Temperature to set the bed to when using the pre-heating menu item
 panel.gamma_jog_feedrate                     1000			 #
 panel.display_extruder                       true            # enable to display Extruder position on the Watch screen when printing
