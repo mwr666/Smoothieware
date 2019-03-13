@@ -29,10 +29,10 @@ using namespace std;
 
 ExtruderScreen::ExtruderScreen()
 {
+	hot = false;
+	readyhot = false;
 }
-float deftemp;
-bool hot = false;
-bool readyhot = false;
+
 static struct pad_temperature getTemperatures(uint16_t heater_cs)
 {
     struct pad_temperature temp;
@@ -95,7 +95,7 @@ void ExtruderScreen::clicked_menu_entry(uint16_t line)
 //        case 2: send_command("M120\nG91\nG1 E5 F200\nM121"); break;
 //        case 3: send_command("M120\nG91\nG1 E-5 F200\nM121"); break;      
         case 3: if (readyhot == true) send_command("M120\nG91\nG1 E-100 F6000\nM121\nG92 E0"); break;
-		case 4: if (readyhot == true) send_command("M120\nG91\nG1 E90 F300\nM121\nG92 E0"); break;
+		case 4: if (readyhot == true) send_command("M120\nG91\nG1 E80 F300\nM121\nG92 E0"); break;
 		case 5: if (readyhot == true) send_command("M120\nG91\nG1 E10 F100\nM121\nG92 E0"); break;
 		
 //      case 3: setupConfigSettings(); break; // lazy load

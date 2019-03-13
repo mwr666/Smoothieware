@@ -26,6 +26,13 @@ class ExtruderScreen : public PanelScreen {
 	  void chckHotendTemp();
 	  void preheat();
 	  
+	  float deftemp;
+	  
+	struct {
+        bool hot:1;
+        bool readyhot:1;
+    };
+	  
 };
 
 #endif
