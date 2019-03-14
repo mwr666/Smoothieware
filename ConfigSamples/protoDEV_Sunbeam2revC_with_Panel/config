@@ -217,6 +217,9 @@ temperature_control.exp.beta                 4267            #
 temperature_control.exp.heater_pin           nc              #
 temperature_control.exp.designator           C               #
 
+## Filament Runout sensor module
+filament_runout.enable					 	 true			 #
+
 ## Temperatureswitch
 # See http://smoothieware.org/temperatureswitch
 # Automatically toggle a switch at a specified temperature. Different ones of these may be defined to monitor different temperatures and switch different swithxes

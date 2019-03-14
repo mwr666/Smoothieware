@@ -13,6 +13,13 @@
 #include "Gcode.h"
 #include "Panel.h"
 
+#include "Config.h"
+#include "checksumm.h"
+#include "ConfigValue.h"
+
+#define filament_runout_checksum  	CHECKSUM("filament_runout")
+#define enable_checksum             CHECKSUM("enable")
+
 FilamentRunout::FilamentRunout()
 {
 }
@@ -23,7 +30,12 @@ FilamentRunout::~FilamentRunout()
 
 void FilamentRunout::on_module_loaded()
 {
-	
+	    // if the module is disabled -> do nothing
+    if(!THEKERNEL->config->value( filament_runout_checksum, enable_checksum )->by_default(false)->as_bool()) {
+        // as this module is not needed free up the resource
+        delete this;
+        return;
+    }
     this->register_for_event(ON_GCODE_RECEIVED);
 }
 
