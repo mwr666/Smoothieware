@@ -44,7 +44,7 @@ void FilamentRunout::on_gcode_received(void *argument)
 	
 		Gcode *gcode = static_cast<Gcode *>(argument);
 		if (gcode->has_m) {
-			if (gcode->m == 701) { // set filament detector parameters S seconds per check, P pulses per mm
+			if (gcode->m == 701) {
 			  this->send_command( "suspend", &(StreamOutput::NullStream) );
 			}	 
 		}
