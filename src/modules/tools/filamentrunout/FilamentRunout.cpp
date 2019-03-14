@@ -10,10 +10,8 @@
 #include "StreamOutputPool.h"
 #include "StreamOutput.h"
 #include "SerialMessage.h"
-#include "utils.h"
 #include "Gcode.h"
 #include "Panel.h"
-
 
 FilamentRunout::FilamentRunout()
 {
@@ -25,6 +23,7 @@ FilamentRunout::~FilamentRunout()
 
 void FilamentRunout::on_module_loaded()
 {
+	
     this->register_for_event(ON_GCODE_RECEIVED);
 }
 
