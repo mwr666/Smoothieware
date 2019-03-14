@@ -201,13 +201,6 @@ switch.fan3.startup_state                    true            #
 switch.fan3.startup_value					 255			 #
 switch.fan3.max_pwm                          255             # Set max pwm for the pin default is 255
 
-
-#switch.misc.enable                           true            # Enable this module
-#switch.misc.input_on_command                 M42             # Command that will turn this switch on
-#switch.misc.input_off_command                M43             # Command that will turn this switch off
-#switch.misc.output_pin                       2.4             # Pin this module controls
-#switch.misc.output_type                      digital         # Digital means this is just an on or off pin
-
 #pcb thermistor
 temperature_control.pcb.enable               true            #
 temperature_control.pcb.thermistor_pin       0.26            # 0.26 for pcb

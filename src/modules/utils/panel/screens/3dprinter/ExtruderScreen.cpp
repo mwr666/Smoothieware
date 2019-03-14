@@ -90,7 +90,7 @@ void ExtruderScreen::clicked_menu_entry(uint16_t line)
 {
     switch ( line ) {
         case 0: THEPANEL->enter_screen(this->parent); return;
-		case 1: send_command("suspend"); break;
+		case 1: send_command("\nsuspend"); break;
 		case 2: if (hot == true) send_command("\nM104_S0"); else this->preheat(); hot = true; break; 
 //        case 2: send_command("M120\nG91\nG1 E5 F200\nM121"); break;
 //        case 3: send_command("M120\nG91\nG1 E-5 F200\nM121"); break;      
