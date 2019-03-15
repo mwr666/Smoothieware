@@ -74,11 +74,11 @@ void ExtruderScreen::display_menu_line(uint16_t line)
 {
     switch ( line ) {
         case 0: THEPANEL->lcd->printf("Back");  break;
-		case 1: THEPANEL->lcd->printf("Suspend"); break;
-		case 2: if (THEPANEL->is_suspended())chckHotendTemp(); break;
-        case 3: if (readyhot == true) THEPANEL->lcd->printf("Unload"); break;
-		case 4: if (readyhot == true) THEPANEL->lcd->printf("Load"); break;
-		case 5: if (readyhot == true) THEPANEL->lcd->printf("Purge"); break;
+		case 1: if (THEPANEL->is_suspended())chckHotendTemp(); else THEPANEL->lcd->printf("Suspend to begin"); break;
+		//case 2: if (THEPANEL->is_suspended())chckHotendTemp(); break;
+        case 2: if (readyhot == true) THEPANEL->lcd->printf("Unload"); break;
+		case 3: if (readyhot == true) THEPANEL->lcd->printf("Load"); break;
+		case 4: if (readyhot == true) THEPANEL->lcd->printf("Purge"); break;
 		
     }
 }
@@ -87,14 +87,15 @@ void ExtruderScreen::clicked_menu_entry(uint16_t line)
 {
     switch ( line ) {
         case 0: THEPANEL->enter_screen(this->parent); return;
-		case 1: send_command("\nsuspend"); break;
-		case 2: if (THEPANEL->is_suspended())	{
-					if (hot == true) send_command("\nM104_S0"); else this->preheat(); hot = true;
-				} 
+		//case 1: send_command("\nsuspend"); break;
+		case 1: if (THEPANEL->is_suspended())	{
+					if (hot == true) send_command("\nM104_S0"); 
+					else this->preheat(); hot = true;
+				} else send_command("\nsuspend");
 				break;   
-        case 3: if (readyhot == true) send_command("M120\nG91\nG1 E-100 F6000\nM121\nG92 E0"); break;
-		case 4: if (readyhot == true) send_command("M120\nG91\nG1 E80 F300\nM121\nG92 E0"); break;
-		case 5: if (readyhot == true) send_command("M120\nG91\nG1 E10 F100\nM121\nG92 E0"); break;
+        case 2: if (readyhot == true) send_command("M120\nG91\nG1 E-100 F6000\nM121\nG92 E0"); break;
+		case 3: if (readyhot == true) send_command("M120\nG91\nG1 E80 F300\nM121\nG92 E0"); break;
+		case 4: if (readyhot == true) send_command("M120\nG91\nG1 E10 F100\nM121\nG92 E0"); break;
 		
     }
 }
